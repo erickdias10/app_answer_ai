@@ -11,8 +11,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # ---------------------------
 # Configuração do Modelo Personalizado
 # ---------------------------
-VECTOR_PATH = r"C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\vectorizer.pkl"  # Caminho para o vetorizador salvo
-MODEL_PATH = r"C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\vectorizer.pkl"  # Caminho para o modelo salvo
+VECTOR_PATH = r"C:\\Users\\erick\\OneDrive\\Área de Trabalho\\Jupyter Notebook\\ANVISA_Projeto02\\vectorizer.pkl"  # Caminho para o vetorizador salvo
+MODEL_PATH = r"C:\\Users\\erick\\OneDrive\\Área de Trabalho\\Jupyter Notebook\\ANVISA_Projeto02\\model.pkl"  # Caminho para o modelo salvo
 
 def load_model(vectorizer_path, model_path):
     """
@@ -30,7 +30,7 @@ def predict_answer(question, text, vectorizer, model):
         # Pré-processar texto e pergunta
         input_text = f"{text} [SEP] {question}"  # Concatenar texto e pergunta
         input_vectorized = vectorizer.transform([input_text])
-        
+
         # Fazer a predição
         prediction = model.predict(input_vectorized)
         return prediction[0]  # Retorna a resposta
@@ -90,11 +90,13 @@ if uploaded_file:
             st.success("Modelo carregado com sucesso!")
 
             # Campo para perguntas do usuário
-            question = st.text_input("Faça sua pergunta sobre o conteúdo do arquivo:")
+            question = st.text_area("Faça sua pergunta sobre o conteúdo do arquivo:")
             if question:
                 with st.spinner("Processando a resposta..."):
                     answer = predict_answer(question, text, vectorizer, model)
                     st.write("Resposta:")
                     st.success(answer)
+    except FileNotFoundError as e:
+        st.error(f"Arquivo não encontrado: {e.filename}")
     except Exception as e:
-        st.error(f"Ocorreu um erro: {e}")
+        st.error(f"Ocorreu um erro ao carregar o modelo: {e}")
