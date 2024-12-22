@@ -73,7 +73,7 @@ def extract_text_with_pypdf2(pdf_path):
 # ---------------------------
 # Interface Streamlit
 # ---------------------------
-st.title("Olá, eu sou a AnaVisa, a Inteligencia Artificial da Anvisa, como posso lhe ajudar hoje?")
+st.title("Olá, eu sou a AnaVisa! \n A IA da Anvisa. \n Como posso lhe ajudar hoje?")
 
 uploaded_file = st.file_uploader("Envie um arquivo PDF", type="pdf")
 
