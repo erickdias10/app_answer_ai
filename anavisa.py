@@ -4,25 +4,38 @@
 import re
 from PyPDF2 import PdfReader
 import unicodedata
-from docx import Document
-from docx.shared import Pt
-import os
 import joblib
 import streamlit as st
-from langchain.chains.question_answering import load_qa_chain
-from langchain.llms import OpenAI
-from langchain.document_loaders import TextLoader
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 # ---------------------------
-# Configuração do LangChain
+# Configuração do Modelo Personalizado
 # ---------------------------
-OPENAI_API_KEY = "sua_openai_api_key_aqui"  # Substitua pela sua chave da OpenAI
+VECTOR_PATH = r"Caminho/para/seu/vectorizer.pkl"  # Caminho para o vetorizador salvo
+MODEL_PATH = r"Caminho/para/seu/modelo.pkl"  # Caminho para o modelo salvo
 
-def load_llm():
-    return OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=OPENAI_API_KEY)
+def load_model(vectorizer_path, model_path):
+    """
+    Carrega o vetorizador e o modelo.
+    """
+    vectorizer = joblib.load(vectorizer_path)
+    model = joblib.load(model_path)
+    return vectorizer, model
+
+def predict_answer(question, text, vectorizer, model):
+    """
+    Faz a predição com base na pergunta e no texto fornecido.
+    """
+    try:
+        # Pré-processar texto e pergunta
+        input_text = f"{text} [SEP] {question}"  # Concatenar texto e pergunta
+        input_vectorized = vectorizer.transform([input_text])
+        
+        # Fazer a predição
+        prediction = model.predict(input_vectorized)
+        return prediction[0]  # Retorna a resposta
+    except Exception as e:
+        return f"Erro na predição: {e}"
 
 # ---------------------------
 # Funções de Processamento de Texto
@@ -58,73 +71,29 @@ def extract_text_with_pypdf2(pdf_path):
         return ''
 
 # ---------------------------
-# Funções de Extração de Dados
-# ---------------------------
-def extract_process_number(file_name):
-    """
-    Extrai o número do processo a partir do nome do arquivo, removendo "SEI" e preservando o restante.
-    """
-    base_name = os.path.splitext(file_name)[0]  # Remove a extensão
-    if base_name.startswith("SEI"):
-        base_name = base_name[3:].strip()  # Remove "SEI"
-    return base_name
-
-# ---------------------------
-# Função de Perguntas e Respostas
-# ---------------------------
-def create_qa_chain(text):
-    """
-    Cria um pipeline de perguntas e respostas com LangChain.
-    """
-    llm = load_llm()
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    documents = text_splitter.split_text(text)
-    
-    # Criar embeddings para busca
-    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-    vectorstore = FAISS.from_texts(documents, embeddings)
-    
-    return vectorstore, llm
-
-def answer_question(vectorstore, llm, question):
-    """
-    Responde a uma pergunta usando LangChain e busca nos embeddings.
-    """
-    retriever = vectorstore.as_retriever()
-    docs = retriever.get_relevant_documents(question)
-    
-    chain = load_qa_chain(llm, chain_type="stuff")
-    answer = chain.run(input_documents=docs, question=question)
-    return answer
-
-# ---------------------------
 # Interface Streamlit
 # ---------------------------
-st.title("Sistema de Perguntas e Respostas Baseado em Arquivos")
+st.title("Sistema de Perguntas e Respostas Baseado em Arquivos PDF")
 
 uploaded_file = st.file_uploader("Envie um arquivo PDF", type="pdf")
 
 if uploaded_file:
     try:
-        # Extrai o número do processo a partir do nome do arquivo
-        file_name = uploaded_file.name
-        numero_processo = extract_process_number(file_name)
-
         # Extrai o texto do PDF
         text = extract_text_with_pypdf2(uploaded_file)
         if text:
-            st.success(f"Texto extraído com sucesso! Número do processo: {numero_processo}")
-            
-            # Configura o sistema de perguntas e respostas
-            st.write("Configurando o sistema de perguntas e respostas...")
-            vectorstore, llm = create_qa_chain(text)
-            st.success("Sistema configurado! Você pode começar a fazer perguntas.")
-            
+            st.success("Texto extraído com sucesso! Você pode começar a fazer perguntas.")
+
+            # Carrega o modelo e o vetorizador
+            st.write("Carregando o modelo...")
+            vectorizer, model = load_model(VECTOR_PATH, MODEL_PATH)
+            st.success("Modelo carregado com sucesso!")
+
             # Campo para perguntas do usuário
             question = st.text_input("Faça sua pergunta sobre o conteúdo do arquivo:")
             if question:
                 with st.spinner("Processando a resposta..."):
-                    answer = answer_question(vectorstore, llm, question)
+                    answer = predict_answer(question, text, vectorizer, model)
                     st.write("Resposta:")
                     st.success(answer)
     except Exception as e:
