@@ -11,7 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # ---------------------------
 # Configuração do Modelo Personalizado
 # ---------------------------
-VECTOR_PATH = r"C:\\Users\\erick\\OneDrive\\Área de Trabalho\\Jupyter Notebook\\ANVISA_Projeto02\\vectorizer.pkl"  # Caminho para o vetorizador salvo
+VECTOR_PATH = r"C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\vectorizer.pkl"  # Caminho para o vetorizador salvo
 MODEL_PATH = r"C:\\Users\\erick\\OneDrive\\Área de Trabalho\\Jupyter Notebook\\ANVISA_Projeto02\\model.pkl"  # Caminho para o modelo salvo
 
 def load_model(vectorizer_path, model_path):
