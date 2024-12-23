@@ -8,6 +8,20 @@ import joblib
 import streamlit as st
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+import os
+
+VECTOR_PATH = r"C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\vectorizer.pkl"
+
+# Verifique o diretório atual
+print(f"Diretório atual: {os.getcwd()}")
+
+# Teste se o arquivo existe
+if os.path.exists(VECTOR_PATH):
+    print("Arquivo encontrado!")
+else:
+    print("Arquivo não encontrado!")
+
+
 # ---------------------------
 # Configuração do Modelo Personalizado
 # ---------------------------
