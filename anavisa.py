@@ -11,6 +11,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # ---------------------------
 # Configuração do Modelo Personalizado
 # ---------------------------
+
+uploaded_vectorizer = st.file_uploader("Envie o arquivo vectorizer.pkl", type="pkl")
+if uploaded_vectorizer:
+    with open("vectorizer.pkl", "wb") as f:
+        f.write(uploaded_vectorizer.read())
+    VECTOR_PATH = "vectorizer.pkl"
+    st.success("Vectorizer carregado com sucesso!")
+
+
 VECTOR_PATH = "C:\\Users\\erick\\OneDrive\\Área de Trabalho\\Jupyter Notebook\\ANVISA_Projeto02\\vectorizer.pkl"
 MODEL_PATH = "C:\\Users\\erick\\OneDrive\\Área de Trabalho\\Jupyter Notebook\\ANVISA_Projeto02\\model.pkl"
 
