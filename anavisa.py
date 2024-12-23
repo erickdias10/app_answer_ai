@@ -12,8 +12,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # Configuração do Modelo Personalizado
 # ---------------------------
 
-VECTOR_PATH = "C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\vectorizer.pkl"
-MODEL_PATH = "C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\modelo_classificador.pkl"
+VECTOR_PATH = r"C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\vectorizer.pkl"
+MODEL_PATH = r"C:\Users\erick\OneDrive\Área de Trabalho\Jupyter Notebook\ANVISA_Projeto02\modelo_classificador.pkl"
+
 
 def load_model(vectorizer_path, model_path):
     """
