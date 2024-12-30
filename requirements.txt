@@ -6,3 +6,4 @@ imbalanced-learn
 nltk
 PyPDF2
 spacy
+transformers
