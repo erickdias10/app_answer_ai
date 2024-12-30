@@ -9,3 +9,4 @@ spacy
 transformers
 pdf2image
 pytesseract
+faiss
