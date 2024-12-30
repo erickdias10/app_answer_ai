@@ -1,0 +1,5 @@
+build-essential
+gcc
+g++
+poppler-utils
+tesseract-ocr
