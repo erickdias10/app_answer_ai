@@ -8,3 +8,4 @@ PyPDF2
 spacy
 transformers
 pdf2image
+pytesseract
