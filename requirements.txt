@@ -5,8 +5,9 @@ streamlit
 imbalanced-learn
 nltk
 PyPDF2
-spacy
 transformers
 pdf2image
 pytesseract
 faiss
+spacy
+pt-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/pt_core_news_lg-3.5.0/pt_core_news_lg-3.5.0.tar.gz
