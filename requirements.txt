@@ -5,5 +5,3 @@ sentence-transformers==2.2.2
 pdf2image
 pytesseract
 faiss-cpu
-spacy==3.5.3
-pt-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/pt_core_news_lg-3.5.0/pt_core_news_lg-3.5.0.tar.gz
